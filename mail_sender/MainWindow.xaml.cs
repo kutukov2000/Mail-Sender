@@ -62,5 +62,15 @@ namespace mail_sender
 
             client.Send(mail);
         }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            LoginWindow window = new LoginWindow();
+            if(window.ShowDialog()== true)
+            {
+                myMailAddress=window.LoginTextBox.Text;
+                accountPassword=window.PasswordTextBox.Text;
+            }
+        }
     }
 }

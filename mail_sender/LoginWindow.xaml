@@ -1,0 +1,28 @@
+﻿<Window x:Class="mail_sender.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:mail_sender"
+        mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+     TextElement.FontWeight="Regular"
+     TextElement.FontSize="13"
+     TextOptions.TextFormattingMode="Ideal"
+     TextOptions.TextRenderingMode="Auto"
+     Background="{DynamicResource MaterialDesignPaper}"
+     FontFamily="{DynamicResource MaterialDesignFont}"
+        Title="LoginWindow" Height="450" Width="800">
+    <StackPanel>
+        <Rectangle Fill="Gray" RadiusX="100" RadiusY="100" Height="100" Width="100"></Rectangle>
+        <TextBlock>Login</TextBlock>
+        <TextBox x:Name="LoginTextBox"></TextBox>
+        <TextBlock>Password</TextBlock>
+        <TextBox x:Name="PasswordTextBox"></TextBox>
+        <DockPanel>
+            <Button DockPanel.Dock="Left">Cancel</Button>
+            <Button DockPanel.Dock="Right" Click="Button_Click">OK</Button>
+        </DockPanel>
+    </StackPanel>
+</Window>
