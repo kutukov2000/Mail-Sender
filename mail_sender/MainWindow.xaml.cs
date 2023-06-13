@@ -68,8 +68,8 @@ namespace mail_sender
             LoginWindow window = new LoginWindow();
             if(window.ShowDialog()== true)
             {
-                myMailAddress=window.LoginTextBox.Text;
-                accountPassword=window.PasswordTextBox.Text;
+                //myMailAddress=window.LoginTextBox.Text;
+                //accountPassword=window.PasswordTextBox.Text;
             }
         }
     }
