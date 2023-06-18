@@ -16,9 +16,6 @@ using System.Windows.Shapes;
 
 namespace mail_sender
 {
-    /// <summary>
-    /// Interaction logic for LoginWindow.xaml
-    /// </summary>
     public partial class LoginWindow : Window
     {
         public LoginWindow()
@@ -44,7 +41,6 @@ namespace mail_sender
             // Regex pattern for email validation
             string pattern = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
 
-            // Use Regex.IsMatch to check if the email matches the pattern
             bool isValid = Regex.IsMatch(email, pattern);
 
             return isValid;
