@@ -17,6 +17,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using PropertyChanged;
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 
 namespace mail_sender
 {
@@ -32,7 +33,7 @@ namespace mail_sender
         {
             myMailAddress = "Login";
             HighPriority = false;
-            attachments=new ObservableCollection<Attachment>();
+            attachments = new ObservableCollection<Attachment>();
         }
         public void AddAttachment(string fileName)
         {
@@ -51,11 +52,11 @@ namespace mail_sender
             attachments.Clear();
             HighPriority = false;
         }
-        
+
     }
     public partial class MainWindow : Window
     {
-        ViewModel model=new ViewModel();
+        ViewModel model = new ViewModel();
         public MainWindow()
         {
             InitializeComponent();
@@ -66,7 +67,12 @@ namespace mail_sender
 
         private void Send_Click(object sender, RoutedEventArgs e)
         {
-            if (model.myMailAddress != null && model.accountPassword != null)
+            if (!ValidateEmail(toTxtBox.Text)&&toTxtBox.Text.Length!=0)
+            {
+                MessageBox.Show("Incorrect recceiver email");
+                return;
+            }
+            try
             {
                 // create new mail
                 MailMessage mail = new MailMessage(model.myMailAddress, toTxtBox.Text)
@@ -76,10 +82,13 @@ namespace mail_sender
                     Subject = subjectTxtBox.Text,
                     Priority = model.HighPriority == true ? MailPriority.High : MailPriority.Normal
                 };
+
+                //add attachments
                 foreach (var item in model.Attachments)
                 {
                     mail.Attachments.Add(item);
                 }
+
                 // send mail message
                 SmtpClient client = new SmtpClient("smtp.gmail.com", 587)
                 {
@@ -88,6 +97,10 @@ namespace mail_sender
                 };
 
                 client.Send(mail);
+            }
+            catch (Exception ex)
+            {
+
             }
             model.Clear();
             ClearTextBox();
@@ -123,6 +136,16 @@ namespace mail_sender
             toTxtBox.Clear();
             subjectTxtBox.Clear();
             bodyTxtBox.Clear();
+        }
+        private bool ValidateEmail(string email)
+        {
+            // Regex pattern for email validation
+            string pattern = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
+
+            // Use Regex.IsMatch to check if the email matches the pattern
+            bool isValid = Regex.IsMatch(email, pattern);
+
+            return isValid;
         }
     }
 }
