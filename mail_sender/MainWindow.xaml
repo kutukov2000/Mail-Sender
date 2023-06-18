@@ -72,10 +72,11 @@
             <Button Click="Send_Click" DockPanel.Dock="Left">Send</Button>
         </StackPanel>
         <StackPanel Margin="5" Orientation="Horizontal" HorizontalAlignment="Right">
-            <ItemsControl x:Name="attachmentsList" ItemsSource="{Binding Attachments}" Height="30" VerticalContentAlignment="Center">
+            <ScrollViewer>
+            <ItemsControl x:Name="attachmentsList" ItemsSource="{Binding Attachments}" VerticalContentAlignment="Center">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" MaxWidth="400" />
+                        <WrapPanel Orientation="Horizontal" ScrollViewer.VerticalScrollBarVisibility="Visible" MaxWidth="450"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
@@ -102,15 +103,15 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-
+            </ScrollViewer>
             <Button Click="AddAttachment_Click" 
                     Style="{StaticResource MaterialDesignPaperLightButton}" 
                     Background="Transparent"
                     BorderBrush="Black"
-                    Margin="0 0 10 0">
+                    Margin="10 0 10 0">
                 <materialDesign:PackIcon Kind="FileDocumentPlus" />
             </Button>
-           
+
         </StackPanel>
     </DockPanel>
 </Window>

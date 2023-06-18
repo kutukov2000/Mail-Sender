@@ -62,8 +62,6 @@ namespace mail_sender
             DataContext = model;
 
             attachmentsList.Items.Clear();
-
-            
         }
 
         private void Send_Click(object sender, RoutedEventArgs e)
