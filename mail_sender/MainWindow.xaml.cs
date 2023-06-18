@@ -15,62 +15,116 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PropertyChanged;
+using System.Collections.ObjectModel;
 
 namespace mail_sender
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    [AddINotifyPropertyChangedInterface]
+    class ViewModel
     {
-        // generate apps password
-        // https://stackoverflow.com/questions/72547853/unable-to-send-email-in-c-sharp-less-secure-app-access-not-longer-available
-
+        private ObservableCollection<Attachment> attachments;
+        public IEnumerable<Attachment> Attachments => attachments;
         public string myMailAddress { get; set; }
         public string accountPassword { get; set; }
+        public bool HighPriority { get; set; }
+        public ViewModel()
+        {
+            myMailAddress = "Login";
+            HighPriority = false;
+            attachments=new ObservableCollection<Attachment>();
+        }
+        public void AddAttachment(string fileName)
+        {
+            attachments.Add(new Attachment(fileName));
+        }
+        public void RemoveAttachment(string fileName)
+        {
+            Attachment attachmentToRemove = attachments.FirstOrDefault(a => a.Name == fileName);
+            if (attachmentToRemove != null)
+            {
+                attachments.Remove(attachmentToRemove);
+            }
+        }
+        public void Clear()
+        {
+            attachments.Clear();
+            HighPriority = false;
+        }
+        
+    }
+    public partial class MainWindow : Window
+    {
+        ViewModel model=new ViewModel();
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = model;
+
+            attachmentsList.Items.Clear();
+
+            
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Send_Click(object sender, RoutedEventArgs e)
         {
-            // create new mail
-            MailMessage mail = new MailMessage(myMailAddress, toTxtBox.Text)
+            if (model.myMailAddress != null && model.accountPassword != null)
             {
-                Subject = subjectTxtBox.Text,
-                Body = $"<h1>My Mail Message from C#</h1><p>{bodyTxtBox.Text}</p>",
-                IsBodyHtml = true,
-                Priority = MailPriority.High
-            };
+                // create new mail
+                MailMessage mail = new MailMessage(model.myMailAddress, toTxtBox.Text)
+                {
+                    IsBodyHtml = true,
 
-            // add attachments
-            var result = MessageBox.Show("Do you want to attach a file?", "Attach File", MessageBoxButton.YesNo);
-            if (result == MessageBoxResult.Yes)
-            {
-                OpenFileDialog dialog = new OpenFileDialog();
-                if (dialog.ShowDialog() == true)
-                    mail.Attachments.Add(new Attachment(dialog.FileName));
+                    Subject = subjectTxtBox.Text,
+                    Priority = model.HighPriority == true ? MailPriority.High : MailPriority.Normal
+                };
+                foreach (var item in model.Attachments)
+                {
+                    mail.Attachments.Add(item);
+                }
+                // send mail message
+                SmtpClient client = new SmtpClient("smtp.gmail.com", 587)
+                {
+                    Credentials = new NetworkCredential(model.myMailAddress, model.accountPassword),
+                    EnableSsl = true
+                };
+
+                client.Send(mail);
             }
-
-            // send mail message
-            SmtpClient client = new SmtpClient("smtp.gmail.com", 587)
-            {
-                Credentials = new NetworkCredential(myMailAddress, accountPassword),
-                EnableSsl = true
-            };
-
-            client.Send(mail);
+            model.Clear();
+            ClearTextBox();
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Login_Click(object sender, RoutedEventArgs e)
         {
             LoginWindow window = new LoginWindow();
-            if(window.ShowDialog()== true)
+            if (window.ShowDialog() == true)
             {
-                //myMailAddress=window.LoginTextBox.Text;
-                //accountPassword=window.PasswordTextBox.Text;
+                model.myMailAddress = window.Login.Text;
+                model.accountPassword = window.Password.Password;
             }
+        }
+
+        private void AddAttachment_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            if (dialog.ShowDialog() == true)
+                model.AddAttachment(dialog.FileName);
+        }
+
+        private void RemoveAttachment_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+
+            Attachment attachment = (Attachment)button.DataContext;
+
+            model.RemoveAttachment(attachment.Name);
+        }
+        public void ClearTextBox()
+        {
+            toTxtBox.Clear();
+            subjectTxtBox.Clear();
+            bodyTxtBox.Clear();
         }
     }
 }

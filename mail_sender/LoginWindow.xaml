@@ -12,35 +12,51 @@
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextRenderingMode="Auto"
         FontFamily="{DynamicResource MaterialDesignFont}"
-        Title="LoginWindow" Height="450" Width="800"
-        Background="#62efff">
-    <StackPanel HorizontalAlignment="Center">
+        Title="LoginWindow" Height="450" Width="400"
+        Background="#b2ebf2">
+    <Window.Resources>
+        <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignPaperButton}">
+            <Setter Property="Width" Value="90"></Setter>
+            <Setter Property="Margin" Value="5"></Setter>
+            <Setter Property="Background" Value="Transparent"></Setter>
+            <Setter Property="BorderBrush" Value="#767676"></Setter>
+        </Style>
+        <Style TargetType="TextBox" x:Key="nonValidEmail">
+            <Setter Property="Foreground" Value="Red"/>
+            <Setter Property="BorderBrush" Value="Red"/>
+        </Style>
+    </Window.Resources>
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
         <materialDesign:PackIcon
             Width="128"
             Height="128"
+            Margin="0 0 0 15"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Kind="AccountCircle"/>
-        <!--<TextBox
-            x:Name="LoginTextBox"
-            materialDesign:HintAssist.Hint="Name"
-            Width="200">
-        </TextBox>-->
         <TextBox
             Width="200"
             Margin="5"
-            x:Name="LoginTextBox"
-            materialDesign:HintAssist.Hint="Name">
+            x:Name="Login"
+            materialDesign:HintAssist.Hint="Login"
+            
+            LostFocus="Login_LostFocus">
         </TextBox>
         <PasswordBox
             Width="200"
             Margin="5"
-  x:Name="PasswordTextBox"
-  materialDesign:HintAssist.Hint="Password"
-  materialDesign:TextFieldAssist.HasClearButton="True" />
-        <DockPanel>
-            <Button DockPanel.Dock="Left">Cancel</Button>
-            <Button DockPanel.Dock="Right" Click="Button_Click">OK</Button>
+            x:Name="Password"
+            materialDesign:HintAssist.Hint="Password"
+            materialDesign:TextFieldAssist.HasClearButton="True" />
+        <DockPanel LastChildFill="False" Margin="10">
+            <Button
+                Content="Cancel"
+                ToolTip="Resource name: MaterialDesignRaisedButton" />
+            <Button
+                x:Name="OkBbutton"
+                Content="Login"
+                ToolTip="Resource name: MaterialDesignRaisedButton"
+                Click="Button_Click"/>
         </DockPanel>
     </StackPanel>
 </Window>

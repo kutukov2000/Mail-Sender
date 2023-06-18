@@ -1,7 +1,9 @@
-﻿using System;
+﻿using MaterialDesignThemes.Wpf;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,6 +30,24 @@ namespace mail_sender
         {
             this.DialogResult = true;
             this.Close();
+        }
+
+        private void Login_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (!ValidateEmail(Login.Text))
+            {
+                OkBbutton.IsEnabled = false;
+            }
+        }
+        private bool ValidateEmail(string email)
+        {
+            // Regex pattern for email validation
+            string pattern = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
+
+            // Use Regex.IsMatch to check if the email matches the pattern
+            bool isValid = Regex.IsMatch(email, pattern);
+
+            return isValid;
         }
     }
 }
